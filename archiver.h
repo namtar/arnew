@@ -47,7 +47,7 @@ struct Archive_Index {
     uid_t uid;
     gid_t gid;
     enum File_Type fileType;
-    char *fileName;
+    char fileName[256];
     off_t sizeInBytes;
     off_t bytePositionInArchive;
 };

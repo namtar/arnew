@@ -137,8 +137,8 @@ void printHelp() {
 int writeMagicNumber(int fileDescriptor) {
     short magicNumber = MAGIC_NUMBER_ARCHIVE;
 
-//    return write(fileDescriptor, magicNumber, strlen(magicNumber));    
-    return write(fileDescriptor, &magicNumber, sizeof(2));
+    //    return write(fileDescriptor, magicNumber, strlen(magicNumber));    
+    return write(fileDescriptor, &magicNumber, 2);
 }
 
 int writeDirectoryOfContents(int fileDescriptor) {
@@ -148,30 +148,28 @@ int writeDirectoryOfContents(int fileDescriptor) {
 
     // http://stackoverflow.com/questions/12489525/file-permission-issue-with-open-system-call-linux
 
-    result = write(fileDescriptor, &indexes, sizeof (indexes));
+    result = write(fileDescriptor, indexes, sizeof (indexes));
     return result;
 }
 
 void generateIndexes() {
     int i;
 
-    for (i = 0; i < sizeof (indexes) / sizeof (Archive_Index); i++) {
+    for (i = 0; i < 16; i++) {
 
-        Archive_Index index;
-        index.bytePositionInArchive = 0;
-        index.fileName = "";
-        index.fileType = NONE;
-        index.gid = -1;
-        index.lastAccessTime = 0;
-        index.sizeInBytes = 0;
+
+        indexes[i].bytePositionInArchive = 0;
+        indexes[i].fileName[0] = '\0';
+        indexes[i].fileType = NONE;
+        indexes[i].gid = -1;
+        indexes[i].lastAccessTime = 0;
+        indexes[i].sizeInBytes = 0;
         if (i == 15) {
-            index.state = EOA;
+            indexes[i].state = EOA;
         } else {
-            index.state = FREE;
+            indexes[i].state = FREE;
         }
-        index.uid = -1;
-
-        indexes[i] = index;       
+        indexes[i].uid = -1;
     }
 
 }

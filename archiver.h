@@ -29,12 +29,12 @@ enum Index_State {
 };
 
 enum File_Type {
-    DIRECTORY, PLAINFILE
+    NONE, DIRECTORY, PLAINFILE
 };
 
 
 // constants
-#define MAGIC_NUMBER_ARCHIVE "0x4242" // TODO: soll diese nummer nicht vielleicht als char gespeichert werden?
+ #define MAGIC_NUMBER_ARCHIVE 0x4242
 
 // define structs
 

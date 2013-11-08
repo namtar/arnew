@@ -1,6 +1,6 @@
 /* 
  * File:   main.c
- * Author: drummer
+ * Author: Matthias Drummer <s0542834>
  *
  * Created on 27. Oktober 2013, 15:18
  */
@@ -13,11 +13,44 @@
 
 #include "archiver.h" // import my header.
 
+// global array of structs
+Archive_Index indexes[16];
+
 // define functions section
+
+/**
+ * Method prints out a simple help for the user.
+ */
 void printHelp();
+
+/**
+ * Creates a new archive for the given name.
+ * 
+ * @param archiveName the name of the archive to be created
+ * @return the file descriptor. If anything wents wrong -1 is returned
+ */
 int createNewArchive(char *archiveName);
+
+/**
+ * Writes the magic number to the archive.
+ * 
+ * @param fileDescriptor the file descriptor of the archive
+ * @return the file descriptor. If anything wents wrong -1 is returned
+ */
 int writeMagicNumber(int fileDescriptor);
+
+/**
+ * Writes the directory of contents to the archive.
+ * 
+ * @param fileDescriptor the file descriptor of the archive
+ * @return the file descriptor. If anythin wents wrong -1 is returned
+ */
 int writeDirectoryOfContents(int fileDescriptor);
+
+/**
+ * Helper function to gernerate the global array of archive index structs.
+ */
+void generateIndexes();
 
 /**
  * Main function for the arnew program.
@@ -36,6 +69,10 @@ int main(int argc, char** argv) {
         printHelp();
     } else {
         // TODO: check the given file name for max-lenght 255, and consisting only of characters A-Z, a-z, 0-9
+
+        // init the array of Archive_Index structs
+        generateIndexes();
+
         int success = createNewArchive(argv[1]);
         if (success == -1) {
             return EXIT_FAILURE;
@@ -98,9 +135,10 @@ void printHelp() {
 }
 
 int writeMagicNumber(int fileDescriptor) {
-    char* magicNumber = MAGIC_NUMBER_ARCHIVE;
+    short magicNumber = MAGIC_NUMBER_ARCHIVE;
 
-    return write(fileDescriptor, magicNumber, sizeof (magicNumber));
+//    return write(fileDescriptor, magicNumber, strlen(magicNumber));    
+    return write(fileDescriptor, &magicNumber, sizeof(2));
 }
 
 int writeDirectoryOfContents(int fileDescriptor) {
@@ -110,30 +148,30 @@ int writeDirectoryOfContents(int fileDescriptor) {
 
     // http://stackoverflow.com/questions/12489525/file-permission-issue-with-open-system-call-linux
 
+    result = write(fileDescriptor, &indexes, sizeof (indexes));
+    return result;
+}
+
+void generateIndexes() {
     int i;
-    for (i = 0; i < 16; i++) {
+
+    for (i = 0; i < sizeof (indexes) / sizeof (Archive_Index); i++) {
+
         Archive_Index index;
         index.bytePositionInArchive = 0;
         index.fileName = "";
-        index.fileType;
-        index.gid;
-        index.lastAccessTime;
+        index.fileType = NONE;
+        index.gid = -1;
+        index.lastAccessTime = 0;
         index.sizeInBytes = 0;
         if (i == 15) {
             index.state = EOA;
         } else {
             index.state = FREE;
         }
-        index.uid = 0;
+        index.uid = -1;
 
-        /*
-                result = write(fileDescriptor, (Archive_Index*) &index, sizeof (index));
-         */
-        char *string = "SomeString"; // Teststring
-        result = write(fileDescriptor, (char*) string, sizeof (string));
-        if (result == -1) {
-            break;
-        }
+        indexes[i] = index;       
     }
-    return result;
+
 }

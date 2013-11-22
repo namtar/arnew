@@ -98,22 +98,11 @@ int main(int argc, char** argv) {
 
         close(fileDescriptor);
     }
+    printf("Archive successfuly created.\n");
     return (EXIT_SUCCESS);
 }
 
 int createNewArchive(char *archiveName) {
-    /*
-        printf("Debug: Given archiveName: %s\n", archiveName);
-
-        printf("ReadByOwner: %o\n", S_IRUSR);
-        printf("WriteByOwner: %o\n", S_IWUSR);
-        printf("ExecuteByOwner: %o\n", S_IXUSR);
-        printf("ReadByGroup: %o\n", S_IRGRP);
-        printf("WriteByGroup: %o\n", S_IWGRP);
-        printf("ExecuteByGroup: %o\n", S_IXGRP);
-
-        printf("Combindes: %o\n", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
-     */
 
     // Awww http://stackoverflow.com/questions/12489525/file-permission-issue-with-open-system-call-linux
 
@@ -137,7 +126,6 @@ void printHelp() {
 int writeMagicNumber(int fileDescriptor) {
     short magicNumber = MAGIC_NUMBER_ARCHIVE;
 
-    //    return write(fileDescriptor, magicNumber, strlen(magicNumber));    
     return write(fileDescriptor, &magicNumber, 2);
 }
 

@@ -52,5 +52,24 @@ struct Archive_Index {
     off_t bytePositionInArchive;
 };
 
+/******************* function definitions **********************/
+
+
+/**
+ * Maps a given Index_State enum to a string.
+ * 
+ * @param indexState the {@link Index_State}
+ * @return the string representation of the enum
+ */
+char* mapIndexStateToString(enum Index_State indexState);
+
+/**
+ * Maps a given FileType enum to a string.
+ * 
+ * @param fileType the given {@link File_Type}
+ * @return the string representation of the enum
+ */
+char* mapFileTypeToString(enum File_Type fileType);
+
 #endif	/* ARCHIVER_H */
 

@@ -145,8 +145,11 @@ void generateIndexes() {
 
     for (i = 0; i < 16; i++) {
 
-
         indexes[i].bytePositionInArchive = 0;
+
+        if (i == 15) {
+            indexes[i].bytePositionInArchive = 2; // for index 15 this is the start position of the index.
+        }
         indexes[i].fileName[0] = '\0';
         indexes[i].fileType = NONE;
         indexes[i].gid = -1;
